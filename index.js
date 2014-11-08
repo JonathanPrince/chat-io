@@ -28,6 +28,10 @@ io.on('connection', function(client){
     io.emit('online users', loggedIn);
   });
 
+  client.on('new message', function(data){
+    io.emit('message', data);
+  });
+
 });
 
 server.listen(8000, function(){

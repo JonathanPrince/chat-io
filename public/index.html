@@ -16,7 +16,7 @@
   <section id="messages">
     <h2>Messages</h2>
   </section>
-  <section>
+  <section id="new-message">
     <input type="text" id="input" />
     <button id="send">Send</button>
   </section>
@@ -25,6 +25,8 @@
     var socket = io.connect();
     var userList = document.getElementById('users');
     var sendButton = document.getElementById('send');
+    var messages = document.getElementById('messages');
+    var textIn = document.getElementById('input');
     var user = prompt('username?');
 
     socket.emit('login', user);
@@ -38,12 +40,26 @@
 
     function sendMessage(e){
       e.preventDefault();
-      var msg = document.getElementById('input').value;
+      var msg = textIn.value;
       socket.emit('new message', {name: user, message: msg});
-      document.getElementById('input').value = '';
+      textIn.value = '';
+    }
+
+    function addMessage(data){
+      var entry = document.createElement('div');
+      var txt = document.createTextNode(data.name + ': ' + data.message);
+      entry.appendChild(txt);
+      messages.appendChild(entry);
+    }
+
+    function sendOnEnter(e){
+      if(e.keyCode === 13){
+        sendMessage(e);
+      }
     }
 
     sendButton.addEventListener('click', sendMessage, false);
+    textIn.addEventListener('keypress', sendOnEnter, false);
 
     socket.on('online users', function(data){
 
@@ -59,6 +75,10 @@
 
     socket.on('new user', function(data){
       addNewUser(data);
+    });
+
+    socket.on('message', function(data){
+      addMessage(data);
     });
 
   </script>
