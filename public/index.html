@@ -27,7 +27,22 @@
     var sendButton = document.getElementById('send');
     var messages = document.getElementById('messages');
     var textIn = document.getElementById('input');
-    var user = prompt('username?');
+    var user;
+
+    console.log(sessionStorage.getItem("username"));
+
+    if (sessionStorage.getItem("username") == 'null' ||
+        sessionStorage.getItem("username") == null){
+
+      user = prompt('username?');
+
+      sessionStorage.setItem('username', user);
+
+    } else {
+
+      user = sessionStorage.getItem("username");
+
+    }
 
     socket.emit('login', user);
 
