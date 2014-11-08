@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Chat-io</title>
+  <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
 </head>
 <body>
   <header>
@@ -16,5 +17,8 @@
     <textarea></textarea>
     <button class="send">Send</button>
   </section>
+  <script>
+  var socket = io.connect();
+  </script>
 </body>
 </html>
