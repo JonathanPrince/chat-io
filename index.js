@@ -17,7 +17,7 @@ io.on('connection', function(client){
 
   client.on('login', function(data){
     client.user = data;
-    console.log('+' + client.user + ' logged in');
+    console.log('+ ' + client.user + ' logged in');
     loggedIn.push(client.user);
     io.emit('new user', client.user);
   });
@@ -27,6 +27,7 @@ io.on('connection', function(client){
     loggedIn.splice(thisUserIndex, 1);
     io.emit('online users', loggedIn);
     console.log('- ' + client.user + ' logged out');
+    io.emit('message', {name: client.user, message: '... has left the building...'});
   });
 
   client.on('new message', function(data){
