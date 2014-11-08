@@ -26,6 +26,7 @@ io.on('connection', function(client){
     var thisUserIndex = loggedIn.indexOf(client.user);
     loggedIn.splice(thisUserIndex, 1);
     io.emit('online users', loggedIn);
+    console.log('- ' + client.user + ' logged out');
   });
 
   client.on('new message', function(data){
