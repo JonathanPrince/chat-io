@@ -16,14 +16,15 @@
   <section id="messages">
     <h2>Messages</h2>
   </section>
-  <section id="input">
-    <textarea></textarea>
-    <button class="send">Send</button>
+  <section>
+    <input type="text" id="input" />
+    <button id="send">Send</button>
   </section>
   <script>
 
     var socket = io.connect();
     var userList = document.getElementById('users');
+    var sendButton = document.getElementById('send');
     var user = prompt('username?');
 
     socket.emit('login', user);
@@ -34,6 +35,15 @@
       item.appendChild(txt);
       userList.appendChild(item);
     }
+
+    function sendMessage(e){
+      e.preventDefault();
+      var msg = document.getElementById('input').value;
+      socket.emit('new message', {name: user, message: msg});
+      document.getElementById('input').value = '';
+    }
+
+    sendButton.addEventListener('click', sendMessage, false);
 
     socket.on('online users', function(data){
 
