@@ -6,7 +6,8 @@ aside {
   float: left;
   width:15%;
 }
-#messages {
+#messages,
+#new-message {
   float: right;
   width: 85%;
 }
