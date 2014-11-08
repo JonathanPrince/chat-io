@@ -1,0 +1,12 @@
+body {
+  background-color: #fdfdfd;
+  font-family: Helvetica, Arial, sans-serif;
+}
+aside {
+  float: left;
+  width:15%;
+}
+#messages {
+  float: right;
+  width: 85%;
+}
