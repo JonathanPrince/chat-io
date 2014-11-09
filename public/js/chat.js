@@ -1,16 +1,41 @@
 (function() {
 
-  var socket = io.connect();
-  var userList = document.getElementById('users');
-  var sendButton = document.getElementById('send');
-  var messages = document.getElementById('messages');
-  var textIn = document.getElementById('input');
-  var user;
+  var socket     = io.connect(),
+      userList   = document.getElementById('users'),
+      sendButton = document.getElementById('send'),
+      messages   = document.getElementById('messages'),
+      textIn     = document.getElementById('input'),
+      user;
 
-  console.log(sessionStorage.getItem("username"));
+  var addNewUser = function(name) {
+    var item = document.createElement('li');
+    var txt = document.createTextNode(name);
+    item.appendChild(txt);
+    userList.appendChild(item);
+  };
+
+  var sendMessage = function(e) {
+    e.preventDefault();
+    var msg = textIn.value;
+    socket.emit('new message', {name: user, message: msg});
+    textIn.value = '';
+  };
+
+  var addMessage = function(data) {
+    var entry = document.createElement('div');
+    var txt = document.createTextNode(data.name + ': ' + data.message);
+    entry.appendChild(txt);
+    messages.appendChild(entry);
+  };
+
+  var sendOnEnter = function(e) {
+    if(e.keyCode === 13){
+      sendMessage(e);
+    }
+  };
 
   if (sessionStorage.getItem("username") == 'null' ||
-      sessionStorage.getItem("username") == null){
+      sessionStorage.getItem("username") == null) {
 
     user = prompt('username?');
 
@@ -24,36 +49,11 @@
 
   socket.emit('login', user);
 
-  function addNewUser(name){
-    var item = document.createElement('li');
-    var txt = document.createTextNode(name);
-    item.appendChild(txt);
-    userList.appendChild(item);
-  }
-
-  function sendMessage(e){
-    e.preventDefault();
-    var msg = textIn.value;
-    socket.emit('new message', {name: user, message: msg});
-    textIn.value = '';
-  }
-
-  function addMessage(data){
-    var entry = document.createElement('div');
-    var txt = document.createTextNode(data.name + ': ' + data.message);
-    entry.appendChild(txt);
-    messages.appendChild(entry);
-  }
-
-  function sendOnEnter(e){
-    if(e.keyCode === 13){
-      sendMessage(e);
-    }
-  }
-
+  // event listeners for ui
   sendButton.addEventListener('click', sendMessage, false);
   textIn.addEventListener('keypress', sendOnEnter, false);
 
+  // listen for server sending list of users
   socket.on('online users', function(data){
 
     while (userList.firstChild) {
@@ -66,10 +66,12 @@
 
   });
 
+  // listen for new user joining
   socket.on('new user', function(data){
     addNewUser(data);
   });
 
+  // listen for messages
   socket.on('message', function(data){
     addMessage(data);
   });
