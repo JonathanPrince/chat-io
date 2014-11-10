@@ -16,7 +16,7 @@ app.get('/', function(req, res){
 // listen for new connection
 io.on('connection', function(client){
 
-  client.emit('online users', users);
+  io.emit('online users', users);
 
   // listen for username when logged in
   client.on('login', function(data){
@@ -31,16 +31,18 @@ io.on('connection', function(client){
 
   // listen for disconnect
   client.on('disconnect', function(){
-    var userIndex = users.indexOf(client.username);
-    users.splice(userIndex, 1);
-    io.emit('online users', users);
-    console.log('- ' + client.username + ' logged out');
+    if (typeof client.username !== 'undefined') {
+      var userIndex = users.indexOf(client.username);
+      users.splice(userIndex, 1);
+      console.log('- ' + client.username + ' logged out');
+      io.emit('online users', users);
 
-    // send farewell message
-    io.emit('message', {
-      name: client.username,
-      message: '... has left the building...'
-    });
+      // send farewell message
+      io.emit('message', {
+        name: client.username,
+        message: '... has left the building...'
+      });
+    }
   });
 
   // listen for new messages
