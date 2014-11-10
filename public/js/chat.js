@@ -26,6 +26,7 @@
     var txt = document.createTextNode(data.name + ': ' + data.message);
     entry.appendChild(txt);
     messages.appendChild(entry);
+    messages.scrollTop = messages.scrollHeight;
   };
 
   var sendOnEnter = function(e) {
