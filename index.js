@@ -2,6 +2,7 @@ var express = require('express')
   , app     = express()
   , server  = require('http').createServer(app)
   , io      = require('socket.io')(server)
+  , msgs    = []
   , users   = [];
 
 // declare path for static files
@@ -23,6 +24,9 @@ io.on('connection', function(client){
     users.push(client.username);
     console.log('+ ' + client.username + ' logged in');
     io.emit('new user', client.username);
+    msgs.forEach(function(msg){
+      client.emit('message', msg);
+    });
   });
 
   // listen for disconnect
@@ -42,6 +46,10 @@ io.on('connection', function(client){
   // listen for new messages
   client.on('new message', function(data){
     io.emit('message', data);
+    msgs.push(data);
+    while (msgs.length > 10) {
+      msgs.shift();
+    }
   });
 
 });
