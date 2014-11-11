@@ -17,8 +17,10 @@
   var sendMessage = function(e) {
     e.preventDefault();
     var msg = textIn.value;
-    socket.emit('new message', {name: user, message: msg});
-    textIn.value = '';
+    if (msg !== '') {
+      socket.emit('new message', {name: user, message: msg});
+      textIn.value = '';
+    }
   };
 
   var addMessage = function(data) {
