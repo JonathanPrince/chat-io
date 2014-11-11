@@ -27,6 +27,10 @@ io.on('connection', function(client){
     msgs.forEach(function(msg){
       client.emit('message', msg);
     });
+    io.emit('message', {
+      name: client.username,
+      message: '... joined the party...'
+    });
   });
 
   // listen for disconnect
