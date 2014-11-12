@@ -2,6 +2,7 @@ var express = require('express')
   , app     = express()
   , server  = require('http').createServer(app)
   , io      = require('socket.io')(server)
+  , now     = require('dateformat')
   , msgs    = []
   , users   = [];
 
@@ -22,7 +23,7 @@ io.on('connection', function(client){
   client.on('login', function(data){
     client.username = data;
     users.push(client.username);
-    console.log('+ ' + client.username + ' logged in');
+    console.log(now() + ' + ' + client.username + ' logged in');
     io.emit('new user', client.username);
     msgs.forEach(function(msg){
       client.emit('message', msg);
@@ -38,7 +39,7 @@ io.on('connection', function(client){
     if (typeof client.username !== 'undefined') {
       var userIndex = users.indexOf(client.username);
       users.splice(userIndex, 1);
-      console.log('- ' + client.username + ' logged out');
+      console.log(now() + ' - ' + client.username + ' logged out');
       io.emit('online users', users);
 
       // send farewell message
