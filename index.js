@@ -1,8 +1,10 @@
+'use strict';
+
 var express = require('express')
   , app     = express()
   , server  = require('http').createServer(app)
   , io      = require('socket.io')(server)
-  , now     = require('dateformat')
+  , log     = require('./lib/log')
   , msgs    = []
   , users   = [];
 
@@ -23,7 +25,7 @@ io.on('connection', function(client){
   client.on('login', function(data){
     client.username = data;
     users.push(client.username);
-    console.log(now() + ' + ' + client.username + ' logged in');
+    log('+ ' + client.username + ' logged in');
     io.emit('new user', client.username);
     msgs.forEach(function(msg){
       client.emit('message', msg);
@@ -39,7 +41,7 @@ io.on('connection', function(client){
     if (typeof client.username !== 'undefined') {
       var userIndex = users.indexOf(client.username);
       users.splice(userIndex, 1);
-      console.log(now() + ' - ' + client.username + ' logged out');
+      log('- ' + client.username + ' logged out');
       io.emit('online users', users);
 
       // send farewell message
@@ -53,6 +55,7 @@ io.on('connection', function(client){
   // listen for new messages
   client.on('new message', function(data){
     io.emit('message', data);
+    log(data.name + ' : ' + data.message);
     msgs.push(data);
     while (msgs.length > 10) {
       msgs.shift();
