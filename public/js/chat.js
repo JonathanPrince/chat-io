@@ -31,9 +31,28 @@
     messages.scrollTop = messages.scrollHeight;
   };
 
-  var sendOnEnter = function(e) {
+  var showTyping = function(name) {
+    console.log(name + ' is typing');
+  };
+
+  var stopTyping = function(name) {
+    console.log(name + ' stopped typing');
+  };
+
+  var typing = false;
+
+  var keypressHandler = function(e) {
     if(e.keyCode === 13){
       sendMessage(e);
+    } else {
+      if (typing === false) {
+        typing = true;
+        socket.emit('typing', {name: user});
+        setTimeout(function(){
+          typing = false;
+          socket.emit('stop typing', {name: user});
+        }, 10000);
+      }
     }
   };
 
@@ -54,7 +73,7 @@
 
   // event listeners for ui
   sendButton.addEventListener('click', sendMessage, false);
-  textIn.addEventListener('keypress', sendOnEnter, false);
+  textIn.addEventListener('keyup', keypressHandler, false);
 
   // listen for server sending list of users
   socket.on('online users', function(data){
@@ -77,6 +96,14 @@
   // listen for messages
   socket.on('message', function(data){
     addMessage(data);
+  });
+
+  // listen for typing
+  socket.on('typing', function(data){
+    showTyping(data.name);
+  });
+  socket.on('stop typing', function(data){
+    stopTyping(data.name);
   });
 
 })();

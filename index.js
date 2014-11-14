@@ -62,6 +62,14 @@ io.on('connection', function(client){
     }
   });
 
+  // listen for typing
+  client.on('typing', function(data){
+    client.broadcast.emit('typing', data);
+  });
+  client.on('stop typing', function(data){
+    client.broadcast.emit('stop typing', data);
+  });
+
 });
 
 // listen for requests on 8000
