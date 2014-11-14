@@ -33,10 +33,22 @@
 
   var showTyping = function(name) {
     console.log(name + ' is typing');
+    var users = userList.childNodes;
+    for (var i = 0; i < users.length; i++) {
+      if (users[i].innerHTML === name) {
+        users[i].style.color = 'red';
+      }
+    }
   };
 
   var stopTyping = function(name) {
     console.log(name + ' stopped typing');
+    var users = userList.childNodes;
+    for (var i = 0; i < users.length; i++) {
+      if (users[i].innerHTML === name) {
+        users[i].style.color = '#000';
+      }
+    }
   };
 
   var typing = false;
@@ -51,7 +63,7 @@
         setTimeout(function(){
           typing = false;
           socket.emit('stop typing', {name: user});
-        }, 10000);
+        }, 5000);
       }
     }
   };
