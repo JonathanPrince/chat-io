@@ -51,19 +51,36 @@
     }
   };
 
-  var typing = false;
+  var typingSent = false;
+  var timerId;
+
+  var typingEnded = function(){
+
+    socket.emit('stop typing', {name: user});
+    typingSent = false;
+  };
 
   var keypressHandler = function(e) {
+
+    // send message on enter or send typing feedback
     if(e.keyCode === 13){
+
       sendMessage(e);
+
     } else {
-      if (typing === false) {
-        typing = true;
+
+      // check if user was already typing
+      if (typingSent === false) {
+
+        // send message that using is typing
         socket.emit('typing', {name: user});
-        setTimeout(function(){
-          typing = false;
-          socket.emit('stop typing', {name: user});
-        }, 5000);
+        typingSent = true;
+        timerId = setTimeout(typingEnded, 5000);
+      } else {
+
+        // clear timer and restart
+        clearTimeout(timerId);
+        timerId = setTimeout(typingEnded, 5000);
       }
     }
   };
