@@ -66,6 +66,10 @@
     if(e.keyCode === 13){
 
       sendMessage(e);
+      if (typingSent === true) {
+        clearTimeout(timerId);
+        typingEnded();
+      }
 
     } else {
 
