@@ -20,6 +20,10 @@
     if (msg !== '') {
       socket.emit('new message', {name: user, message: msg});
       textIn.value = '';
+      if (typingSent === true) {
+        clearTimeout(timerId);
+        typingEnded();
+      }
     }
   };
 
@@ -66,10 +70,6 @@
     if(e.keyCode === 13){
 
       sendMessage(e);
-      if (typingSent === true) {
-        clearTimeout(timerId);
-        typingEnded();
-      }
 
     } else {
 
