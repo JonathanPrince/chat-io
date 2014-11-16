@@ -39,20 +39,12 @@
     }
   };
 
-  var showTyping = function(name) {
+  var showTyping = function(name, state) {
+    var color = state ? 'red' : '#000';
     var users = userList.childNodes;
     for (var i = 0; i < users.length; i++) {
       if (users[i].innerHTML === name) {
-        users[i].style.color = 'red';
-      }
-    }
-  };
-
-  var stopTyping = function(name) {
-    var users = userList.childNodes;
-    for (var i = 0; i < users.length; i++) {
-      if (users[i].innerHTML === name) {
-        users[i].style.color = '#000';
+        users[i].style.color = color;
       }
     }
   };
@@ -135,10 +127,10 @@
 
   // listen for typing
   socket.on('typing', function(data){
-    showTyping(data.name);
+    showTyping(data.name, true);
   });
   socket.on('stop typing', function(data){
-    stopTyping(data.name);
+    showTyping(data.name, false);
   });
 
 })();
