@@ -5,6 +5,7 @@
       sendButton = document.getElementById('send'),
       messages   = document.getElementById('messages'),
       textIn     = document.getElementById('input'),
+      audio      = document.getElementById('audio'),
       user;
 
   var addNewUser = function(name) {
@@ -33,6 +34,9 @@
     entry.appendChild(txt);
     messages.appendChild(entry);
     messages.scrollTop = messages.scrollHeight;
+    if (data.name !== user) {
+      audio.play();
+    }
   };
 
   var showTyping = function(name) {
