@@ -40,7 +40,6 @@
   };
 
   var showTyping = function(name) {
-    console.log(name + ' is typing');
     var users = userList.childNodes;
     for (var i = 0; i < users.length; i++) {
       if (users[i].innerHTML === name) {
@@ -50,7 +49,6 @@
   };
 
   var stopTyping = function(name) {
-    console.log(name + ' stopped typing');
     var users = userList.childNodes;
     for (var i = 0; i < users.length; i++) {
       if (users[i].innerHTML === name) {
